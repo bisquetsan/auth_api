@@ -12,7 +12,11 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
   const { token } = useAuth();
   const getTasks = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:8000/tasks/");
+      const res = await axios.get("http://127.0.0.1:8000/tasks/", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
       console.log(res.data);
       return res.data;
     } catch (error) {

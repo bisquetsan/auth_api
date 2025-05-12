@@ -28,7 +28,9 @@ function Tasks() {
             className="place-items-center flex flex-col justify-center mb-4 rounded-md"
           >
             <p className="text-center font-bold p-2">Title: {task.title}</p>
-            <p className="text-center font-bold p-2">hi</p>
+            <p className="text-center font-bold p-2">
+              Description: {task.description}
+            </p>
           </div>
         ))}
       </div>
