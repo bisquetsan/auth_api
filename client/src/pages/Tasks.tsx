@@ -1,26 +1,21 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useTask } from "../context/TasksContext";
 
 function Tasks() {
+  const { token } = useAuth();
+  const { getTasks, createTask, deleteTask } = useTask();
   const [tasks, setTasks] = useState([]);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [released, setReleaseYear] = useState(0);
-  const [important, setImportant] = useState(false);
 
   useEffect(() => {
-    fetchTasks();
+    if (token) {
+      tasksList();
+    }
   }, []);
 
-  const fetchTasks = async () => {
-    try {
-      const response = await fetch("http://127.0.0.1:8000/tasks/");
-      const data = await response.json();
-      setTasks(data);
-      console.log(data);
-    } catch (err) {
-      console.log(err);
-    }
+  const tasksList = async () => {
+    const tasksss = await getTasks();
+    setTasks(tasksss);
   };
 
   return (
@@ -30,7 +25,7 @@ function Tasks() {
         {tasks.map((task) => (
           <div
             key={task.id}
-            className="place-items-center flex flex-col justify-center bg-gray-800 mb-4 rounded-md"
+            className="place-items-center flex flex-col justify-center mb-4 rounded-md"
           >
             <p className="text-center font-bold p-2">Title: {task.title}</p>
             <p className="text-center font-bold p-2">hi</p>
