@@ -10,9 +10,9 @@ import TaskDetails from "./pages/TaskDetails";
 
 function App() {
   return (
-    <AuthProvider>
-      <div className="bg-gray-900 h-dvh text-white text-center">
-        <Router>
+    <Router>
+      <AuthProvider>
+        <div className="bg-gray-900 h-dvh text-white text-center">
           <Navbar />
           <Routes>
             <Route path="/register" element={<Register />} />
@@ -21,9 +21,9 @@ function App() {
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/task_details" element={<TaskDetails />} />
           </Routes>
-        </Router>
-      </div>
-    </AuthProvider>
+        </div>
+      </AuthProvider>
+    </Router>
   );
 }
 
