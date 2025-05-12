@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
   const linkstyle = "text-1xl font-bold hover:text-blue-200 ml-6";
-  const { user, dispatch } = useAuth();
+  const { user, token, dispatch } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
