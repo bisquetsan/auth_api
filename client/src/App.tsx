@@ -16,7 +16,7 @@ function App() {
     <Router>
       <AuthProvider>
         <TasksProvider>
-          <div className="bg-gray-900 h-dvh text-white text-center">
+          <div className="bg-gray-900 h-full min-h-dvh text-white text-center">
             <Navbar />
             <Routes>
               <Route element={<PublicRoutes />}>
@@ -26,6 +26,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route element={<PrivateRoutes />}>
                 <Route path="/tasks" element={<Tasks />} />
+                <Route path="/task_details/:id" element={<TaskDetails />} />
                 <Route path="/task_details" element={<TaskDetails />} />
               </Route>
             </Routes>

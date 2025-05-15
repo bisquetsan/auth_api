@@ -17,7 +17,6 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
           Authorization: `Token ${token}`,
         },
       });
-      console.log(res.data);
       return res.data;
     } catch (error) {
       console.error("Error obteniendo tareas:", error);
@@ -26,20 +25,31 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
   };
 
   const createTask = async (taskData) => {
+    // Validación simple
+    if (!taskData.title || taskData.title.length > 50) {
+      throw new Error(
+        "El título es requerido y debe tener máximo 50 caracteres"
+      );
+    }
+
     try {
       const res = await axios.post("http://127.0.0.1:8000/tasks/", taskData, {
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Token ${token}`,
         },
       });
       return res.data;
     } catch (error) {
-      console.error("Error creando tarea:", error);
+      console.error(
+        "Error creando tarea:",
+        error.response?.data || error.message
+      );
       throw error;
     }
   };
 
-  const deleteTask = async (id) => {
+  const deleteTask = async (id: number) => {
     try {
       await axios.delete(`http://127.0.0.1:8000/tasks/${id}/`, {
         headers: {
