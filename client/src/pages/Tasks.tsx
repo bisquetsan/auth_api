@@ -43,8 +43,8 @@ function Tasks() {
 
   const eliminateTask = async (pk?: number) => {
     try {
-      await deleteTask(pk ?? 0);
       setTasks((prev) => prev.filter((task) => task.id !== pk));
+      await deleteTask(pk ?? 0);
     } catch (error) {
       console.error("Fallo al eliminar:", error);
     }
