@@ -94,10 +94,9 @@ function Tasks() {
           </div>
         </div>
         {tasks.map((task: tasks) => (
-          <>
+          <div key={task.id}>
             <NavLink
               to={`/task_details/${task.id}`}
-              key={task.id}
               className="place-items-center flex flex-col justify-center mt-4 rounded-md"
             >
               <p className="text-center font-bold p-2">Title: {task.title}</p>
@@ -122,7 +121,7 @@ function Tasks() {
             >
               Delete
             </button>
-          </>
+          </div>
         ))}
       </div>
     </>
