@@ -5,11 +5,21 @@ import {
   useReducer,
   useEffect,
   ReactNode,
+  Dispatch,
 } from "react";
+import { AuthActions, AuthState } from "../types/types";
 
-const AuthContext = createContext();
+const initialState: AuthState = {
+  user: "",
+  token: "",
+};
 
-const authReducer = (state, action) => {
+const AuthContext = createContext<{
+  state: AuthState;
+  dispatch: Dispatch<AuthActions>;
+}>({ state: initialState, dispatch: () => null });
+
+const authReducer = (state: AuthState, action: AuthActions): AuthState => {
   switch (action.type) {
     case "LOGIN":
       return {
@@ -17,7 +27,7 @@ const authReducer = (state, action) => {
         token: action.payload.token,
       };
     case "LOGOUT":
-      return { user: null, token: null };
+      return { user: "", token: "" };
     default:
       return state;
   }
@@ -28,10 +38,7 @@ type AuthProp = {
 };
 
 export const AuthProvider = ({ children }: AuthProp) => {
-  const [state, dispatch] = useReducer(authReducer, {
-    user: null,
-    token: null,
-  });
+  const [state, dispatch] = useReducer(authReducer, initialState);
 
   // Verificar si hay datos de sesión al cargar
   useEffect(() => {
