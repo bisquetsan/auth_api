@@ -1,26 +1,20 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect, MouseEvent } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useTask } from "../context/TasksContext";
 import { NavLink } from "react-router-dom";
-
-type tasks = {
-  title: string;
-  id?: number;
-  description?: ReactNode;
-  datecompleted?: Date;
-  important?: boolean;
-};
+import { FaCheck } from "react-icons/fa";
+import { tasks } from "../types/types";
 
 function Tasks() {
-  const { token } = useAuth();
+  const { state } = useAuth();
   const { getTasks, createTask, deleteTask } = useTask();
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<tasks[]>([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [important, setImportant] = useState(false);
 
   useEffect(() => {
-    if (token) {
+    if (state?.token) {
       tasksList();
     }
   }, []);
@@ -30,7 +24,7 @@ function Tasks() {
     setTasks(tasks);
   };
 
-  const addTask = async (e) => {
+  const addTask = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const taskData = {
       title: title,
@@ -47,9 +41,9 @@ function Tasks() {
     }
   };
 
-  const eliminateTask = async (pk) => {
+  const eliminateTask = async (pk?: number) => {
     try {
-      await deleteTask(pk);
+      await deleteTask(pk ?? 0);
       setTasks((prev) => prev.filter((task) => task.id !== pk));
     } catch (error) {
       console.error("Fallo al eliminar:", error);
@@ -91,7 +85,9 @@ function Tasks() {
 
             <button
               className="ml-auto cursor-pointer pr-4 pl-4 rounded-md bg-gray-600 hover:bg-gray-500"
-              onClick={addTask}
+              onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                addTask(e);
+              }}
             >
               Submit
             </button>
@@ -105,17 +101,21 @@ function Tasks() {
               className="place-items-center flex flex-col justify-center mt-4 rounded-md"
             >
               <p className="text-center font-bold p-2">Title: {task.title}</p>
-              <p className="text-center font-bold p-2">
+              <p className="text-center font-bold p-2 w-[400px]">
                 Description: {task.description}
               </p>
               {task.important ? (
-                <span className="text-green-500">Important</span>
+                <span className="text-green-500 text-2xl font-bold">
+                  <FaCheck />
+                </span>
               ) : (
-                <span className="text-red-500">Not Important</span>
+                <span className="text-red-500 text-2xl font-bold">
+                  <FaCheck />
+                </span>
               )}
             </NavLink>
             <button
-              className="ml-auto cursor-pointer pr-4 pl-4 rounded-md bg-red-600 hover:bg-red-500"
+              className="mt-2 cursor-pointer pr-4 pl-4 rounded-md bg-red-600 hover:bg-red-500"
               onClick={async () => {
                 eliminateTask(task.id);
               }}

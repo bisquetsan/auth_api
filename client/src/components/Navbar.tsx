@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
   const linkstyle = "text-1xl font-bold hover:text-blue-200 ml-6";
-  const { user, token, dispatch } = useAuth();
+  const { state, dispatch } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -27,7 +27,7 @@ function Navbar() {
           </NavLink>
         </li>
 
-        {!user && (
+        {!state?.token && (
           <>
             <li>
               <NavLink className={linkstyle} to="/register">
@@ -42,7 +42,7 @@ function Navbar() {
           </>
         )}
 
-        {user && (
+        {state?.token && (
           <>
             <li>
               <NavLink className={linkstyle} to="/tasks">

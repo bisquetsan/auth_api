@@ -1,20 +1,21 @@
 import { createContext, ReactNode, useContext } from "react";
 import { useAuth } from "./AuthContext";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { tasks, TasksContextType } from "../types/types";
 
-const TasksContext = createContext();
+const TasksContext = createContext<TasksContextType | undefined>(undefined);
 
 type TasksProviderProps = {
   children: ReactNode;
 };
 
 export const TasksProvider = ({ children }: TasksProviderProps) => {
-  const { token } = useAuth();
+  const { state } = useAuth();
   const getTasks = async () => {
     try {
       const res = await axios.get("http://127.0.0.1:8000/tasks/", {
         headers: {
-          Authorization: `Token ${token}`,
+          Authorization: `Token ${state?.token}`,
         },
       });
       return res.data;
@@ -24,7 +25,7 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
     }
   };
 
-  const createTask = async (taskData) => {
+  const createTask = async (taskData: tasks) => {
     // Validación simple
     if (!taskData.title || taskData.title.length > 50) {
       throw new Error(
@@ -36,24 +37,25 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
       const res = await axios.post("http://127.0.0.1:8000/tasks/", taskData, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
+          Authorization: `Token ${state?.token}`,
         },
       });
       return res.data;
     } catch (error) {
+      const axiosError = error as AxiosError;
       console.error(
         "Error creando tarea:",
-        error.response?.data || error.message
+        axiosError.response?.data || axiosError.message
       );
       throw error;
     }
   };
 
-  const deleteTask = async (id: number) => {
+  const deleteTask = async (id?: number) => {
     try {
       await axios.delete(`http://127.0.0.1:8000/tasks/${id}/`, {
         headers: {
-          Authorization: `Token ${token}`,
+          Authorization: `Token ${state?.token}`,
         },
       });
     } catch (error) {
@@ -69,6 +71,10 @@ export const TasksProvider = ({ children }: TasksProviderProps) => {
   );
 };
 
-export const useTask = () => {
-  return useContext(TasksContext);
+export const useTask = (): TasksContextType => {
+  const context = useContext(TasksContext);
+  if (context === undefined) {
+    throw new Error("useTask debe usarse dentro de un TasksProvider");
+  }
+  return context;
 };

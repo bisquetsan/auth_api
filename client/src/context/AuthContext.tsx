@@ -10,7 +10,7 @@ import {
 import { AuthActions, AuthState } from "../types/types";
 
 const initialState: AuthState = {
-  user: "",
+  user: { username: "", email: "", id: undefined },
   token: "",
 };
 
@@ -27,7 +27,7 @@ const authReducer = (state: AuthState, action: AuthActions): AuthState => {
         token: action.payload.token,
       };
     case "LOGOUT":
-      return { user: "", token: "" };
+      return { user: { username: "", email: "", id: undefined }, token: "" };
     default:
       return state;
   }
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }: AuthProp) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ ...state, dispatch }}>
+    <AuthContext.Provider value={{ state, dispatch }}>
       {children}
     </AuthContext.Provider>
   );
