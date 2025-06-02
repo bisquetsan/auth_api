@@ -13,6 +13,7 @@ import PublicRoutes from "./pages/PublicRoutes";
 
 function App() {
   return (
+    //Router
     <Router>
       <AuthProvider>
         <TasksProvider>
